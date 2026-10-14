@@ -1,0 +1,22 @@
+//@version=5
+strategy("Institutional Trend Following Strategy", overlay=true, initial_capital=10000, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// 1. Define the indicator (200-day Simple Moving Average)
+smaLength = input.int(200, title="SMA Length")
+ma200 = ta.sma(close, smaLength)
+
+// Plot the line on the chart visually
+plot(ma200, color=color.blue, title="200 SMA", linewidth=2)
+
+// 2. Buy Condition (Price crosses ABOVE the 200 SMA)
+buyCondition = ta.crossover(close, ma200)
+
+// 3. Sell Condition (Price crosses BELOW the 200 SMA)
+sellCondition = ta.crossunder(close, ma200)
+
+// 4. Execute the Strategy
+if (buyCondition)
+   strategy.entry("Long (Buy)", strategy.long)
+
+if (sellCondition)
+   strategy.close("Long (Buy)")
